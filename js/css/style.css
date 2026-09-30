@@ -1,0 +1,255 @@
+/* ===================================================
+   1. FONT HP001 LOCAL CONFIGURATION
+   =================================================== */
+@font-face {
+    font-family: 'HP001_4_Normal';
+    src: url('../fonts/HP001_4_hang_normal.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'HP001_4_1O';
+    src: url('../fonts/HP001_4_hang_1_o_ly.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'HP001_5_Normal';
+    src: url('../fonts/HP001_5_hang_normal.ttf') format('truetype');
+}
+
+:root {
+    --primary: #FF7B9C;
+    --primary-hover: #FF527B;
+    --secondary: #4ECDC4;
+    --yellow: #FFD166;
+    --bg-color: #FFF9F0;
+    --card-bg: #FFFFFF;
+    --text-color: #2B2D42;
+    --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-writing: 'HP001_4_Normal', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+.hidden { display: none !important; }
+
+/* Font Tiếng Việt Tiểu Học */
+.font-hp001 {
+    font-family: 'HP001_4_Normal', sans-serif;
+}
+
+/* Auth / Màn hình chào */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #FFE5EC 0%, #F0F3FF 100%);
+}
+
+.auth-card {
+    background: #FFF;
+    border-radius: 24px;
+    padding: 40px;
+    width: 420px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.mascot-avatar {
+    font-size: 64px;
+    margin-bottom: 10px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.role-selector {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.role-btn {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    background: #F8FAFC;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.role-btn.active {
+    border-color: var(--primary);
+    background: #FFF0F5;
+    color: var(--primary);
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.btn-main {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-main:hover {
+    background: var(--primary-hover);
+}
+
+/* Dashboard Layout */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background: #FFF;
+    border-right: 2px solid #F0F0F0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-menu button {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #64748B;
+}
+
+.sidebar-menu button.active, .sidebar-menu button:hover {
+    background: #FFF0F5;
+    color: var(--primary);
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* Lưới Ô Ly Tiểu Học (Canvas Container) */
+.oly-grid-container {
+    position: relative;
+    width: 600px;
+    height: 400px;
+    border: 2px solid #FF99AC;
+    border-radius: 12px;
+    background-color: #FFF;
+    /* Mô phỏng đường kẻ ô ly bằng CSS gradient */
+    background-image: 
+        linear-gradient(to right, rgba(255, 182, 193, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 182, 193, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 105, 180, 0.7) 1px, transparent 1px);
+    background-size: 20px 20px, 20px 20px, 100px 100px;
+    margin: 0 auto;
+}
+
+.oly-canvas, .oly-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Responsive grid học sinh */
+.letter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.letter-card {
+    background: white;
+    border-radius: 16px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.2s;
+}
+
+.letter-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--secondary);
+}
+
+.letter-card .char {
+    font-family: 'HP001_4_Normal', sans-serif;
+    font-size: 36px;
+    color: var(--primary);
+}
+
+/* Print CSS */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #print-section, #print-section * {
+        visibility: visible;
+    }
+    #print-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+    .oly-paper {
+        border: 1px solid #000;
+        min-height: 95vh;
+        padding: 20px;
+    }
+}
