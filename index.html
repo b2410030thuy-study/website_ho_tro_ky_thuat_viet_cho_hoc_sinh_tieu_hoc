@@ -142,7 +142,7 @@ let G={};
 function sGames(){const E=Object.entries(GAMES).filter(([k])=>S.cfg.games[k].on);shell(snav(),`<div class="card"><h2>🎮 Trò chơi của bé</h2><div class="row2">${E.map(([k,g])=>{const no=g.min&&!SL(g.min).length;return `<div class="card tile" style="font-size:22px;${no?'opacity:.5':''}" onclick="${no?"toast('Giáo viên chưa nhập cấu tạo chữ cho trò chơi này')":`nav('play/${k}')`}">${g.n}<small>${S.prog['game:'+k]?'✅ Đã chơi':no?'Chưa sẵn sàng':'Chơi nào!'}</small></div>`}).join('')}</div></div>`)}
 function play(k){if(!GAMES[k]||!S.cfg.games[k].on)return sGames();G={k,qs:GAMES[k].q().slice(0,S.cfg.games[k].count),i:0,s:0,t:0,lock:0};G.qs.length?ask():(toast('Chưa có dữ liệu cho trò chơi này'),sGames())}
 function ask(){const q=G.qs[G.i];if(q.type)return askT(q);G.t=0;G.lock=0;shell(snav(),`<div class="card" style="text-align:center"><h3>${GAMES[G.k].n} · Câu ${G.i+1}/${G.qs.length}</h3><h1>${q.ph||esc(q.p)}</h1><button onclick="say(G.qs[G.i].say||G.qs[G.i].p)">🔊 NGHE</button><div>${q.show||''}</div><div style="font-size:40px">${q.o.map((o,i)=>`<button class="opt" onclick="pickA(${i})">${o.h}</button>`).join('')}</div><h2 id="fb">&nbsp;</h2></div>`);say(q.say||q.p)}
-function pickA(i){if(G.lock)return;if(G.qs[G.i].o[i].ok){G.lock=1;if(!G.t)G.s++;$('#fb').textContent='🎉 Giỏi quá!';celebrate(0);say('Giỏi quá!');setTimeout(()=>{G.i++;G.i<G.qs.length?ask():endG()},1700)}else{G.t++;$('#fb').textContent='Chưa đúng rồi, con nhìn kỹ lại và thử lại nhé! 💪';say('Con thử lại nhé')}}
+function pickA(i){if(G.lock)return;if(G.qs[G.i].o[i].ok){G.lock=1;if(!G.t)G.s++;$('#fb').textContent='🎉 Giỏi quá!';celebrate(0);say('Giỏi quá!');setTimeout(()=>{G.i++;G.i<G.qs.length?ask():endG()},1300)}else{G.t++;$('#fb').textContent='Chưa đúng rồi, con nhìn kỹ lại và thử lại nhé! 💪';say('Con thử lại nhé')}}
 async function endG(){let st=0;if(canSave())try{st=(await api('POST','progress',{key:'game:'+G.k,score:G.s})).stars;S.prog['game:'+G.k]={key:'game:'+G.k,stars:S.prog['game:'+G.k]?.stars||st,ts:new Date().toISOString()}}catch{}
  shell(snav(),`<div class="card" style="text-align:center"><h1>🏆 Con hoàn thành rồi!</h1><h2>Con trả lời đúng ngay lần đầu ${G.s}/${G.qs.length} câu</h2><h2>${st?'Con nhận được +1 ⭐':canSave()?'Con đã nhận sao của trò chơi này rồi.':'(Xem trước: không lưu)'}</h2><button class="big" onclick="play('${G.k}')">Chơi lại</button><button class="big" onclick="nav('games')">Trò chơi khác</button></div>`);celebrate(1);say('Giỏi quá!')}
 async function sStars(){try{S.prog=Object.fromEntries((await api('GET','progress')).rows.map(x=>[x.key,x]))}catch{}const t=totalStars(),B=S.cfg.rewards.badges,ks=Object.values(S.prog).filter(r=>r.stars).sort((a,b)=>(b.ts||'')<(a.ts||'')?-1:1);
@@ -217,7 +217,7 @@ function tapT(i){const q=G.qs[G.i];if(G.lock||!(i>=0)||G.pl.includes(i))return;
  drawT();if(q.type=='order'&&G.pl.length==q.seq.length)okQ()}
 function unT(s){if(!G.lock&&G.qs[G.i].type=='build'){G.pl.splice(s,1);drawT()}}
 function chkT(){const q=G.qs[G.i],a=G.pl.map(i=>q.pool[i]).sort().join(),b=[...q.need].sort().join();if(a==b)okQ();else{G.t++;$('#fb').textContent=G.pl.length<q.need.length?'Con ghép thêm các nét nữa nhé! 💪':'Chưa đúng rồi, con thử đổi các nét nhé! 💪';say('Con thử lại nhé')}}
-function okQ(){G.lock=1;if(!G.t)G.s++;$('#fb').textContent='🎉 Giỏi quá!';celebrate(0);say('Giỏi quá!');setTimeout(()=>{G.i++;G.i<G.qs.length?ask():endG()},1700)}
+function okQ(){G.lock=1;if(!G.t)G.s++;$('#fb').textContent='🎉 Giỏi quá!';celebrate(0);say('Giỏi quá!');setTimeout(()=>{G.i++;G.i<G.qs.length?ask():endG()},1300)}
 // ===== GIÁO VIÊN: TRÒ CHƠI & PHẦN THƯỞNG =====
 const bdRow=b=>`<div class="row2 bdr"><input type="number" min="1" value="${b[0]}"><input value="${esc(b[1])}"><input value="${esc(b[2])}" placeholder="Tên huy hiệu"></div>`;
 async function tRewards(){S.cfg=await api('GET','config');const C=S.cfg,st=(await api('GET','students')).students;
@@ -255,12 +255,6 @@ function sfx(big){if(S.mute)return;try{ACX=ACX||new (window.AudioContext||window
  const n=big?80:40,dur=big?2.2:1.1;
  for(let i=0;i<n;i++){const x=Math.random(),t=t0+.2+x*dur,s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=nb;f.type='bandpass';f.frequency.value=1200+Math.random()*2800;f.Q.value=.8;g.gain.setValueAtTime(.9*Math.sin(Math.PI*x)+.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.07);s.connect(f);f.connect(g);g.connect(c.destination);s.start(t,Math.random()*.5,.08)}
  [523.25,659.25,783.99,1046.5].forEach((fr,i)=>{const o=c.createOscillator(),g=c.createGain(),t=t0+i*.11;o.type='triangle';o.frequency.value=fr;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.18,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.35);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.4)})}catch{}}
-function fw(big){if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){toast('🎉 Giỏi quá!');return}
- const cv=document.createElement('canvas');cv.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:50';const W=cv.width=innerWidth,H=cv.height=innerHeight;document.body.append(cv);const x=cv.getContext('2d'),dur=big?2600:1500,life=big?950:750,m=Math.min(W,H)*.1,ic=['⭐','🌟','✨'];
- const st=Array.from({length:big?38:22},(_,i)=>{const sd=i%4,r=Math.random();return{x:sd<2?r*W:sd==2?Math.random()*m:W-Math.random()*m,y:sd==0?Math.random()*m:sd==1?H-Math.random()*m:r*H,s:22+Math.random()*26,d:Math.random()*(dur-life),a:(Math.random()-.5)*.8,e:ic[Math.random()*ic.length|0]}}),t0=performance.now();
- (function frame(t){const el=t-t0;x.clearRect(0,0,W,H);x.textAlign='center';x.textBaseline='middle';x.shadowColor='#ffd166';x.shadowBlur=12;
-  for(const q of st){const u=(el-q.d)/life;if(u<0||u>1)continue;const sc=Math.sin(Math.PI*Math.min(1,u*1.15))*(1+.25*Math.sin(u*14));x.globalAlpha=u<.7?1:(1-u)/.3;x.save();x.translate(q.x,q.y);x.rotate(q.a+u*1.2);x.scale(sc,sc);x.font=q.s+'px serif';x.fillText(q.e,0,0);x.restore()}
-  if(el<dur)requestAnimationFrame(frame);else cv.remove()})(t0)}
-const celebrate=big=>{sfx(big);fw(big)};
+const celebrate=big=>sfx(big);
 init();
 </script></body></html>
