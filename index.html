@@ -256,13 +256,11 @@ function sfx(big){if(S.mute)return;try{ACX=ACX||new (window.AudioContext||window
  for(let i=0;i<n;i++){const x=Math.random(),t=t0+.2+x*dur,s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=nb;f.type='bandpass';f.frequency.value=1200+Math.random()*2800;f.Q.value=.8;g.gain.setValueAtTime(.9*Math.sin(Math.PI*x)+.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.07);s.connect(f);f.connect(g);g.connect(c.destination);s.start(t,Math.random()*.5,.08)}
  [523.25,659.25,783.99,1046.5].forEach((fr,i)=>{const o=c.createOscillator(),g=c.createGain(),t=t0+i*.11;o.type='triangle';o.frequency.value=fr;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.18,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.35);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.4)})}catch{}}
 function fw(big){if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){toast('🎉 Giỏi quá!');return}
- const cv=document.createElement('canvas');cv.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:50';const W=cv.width=innerWidth,H=cv.height=innerHeight;document.body.append(cv);const x=cv.getContext('2d'),P=[],cols=['#ff595e','#ffca3a','#8ac926','#1982c4','#6a4c93','#ff8fab','#ffffff'];
- const burst=(cx,cy)=>{const c=cols[Math.random()*cols.length|0];for(let i=0;i<46;i++){const a=Math.PI*2*i/46+Math.random()*.2,v=2+Math.random()*5;P.push({x:cx,y:cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c:Math.random()<.3?cols[Math.random()*cols.length|0]:c,r:2+Math.random()*2})}};
- for(let k=0;k<(big?6:3);k++)setTimeout(()=>burst(W*(.15+Math.random()*.7),H*(.12+Math.random()*.4)),k*(big?330:260));
- const st=Array.from({length:big?28:14},()=>({x:Math.random()*W,y:-20-Math.random()*H*.4,v:2+Math.random()*3,s:16+Math.random()*16})),dur=big?2800:1700,t0=performance.now();
- (function frame(t){const e=t-t0;x.clearRect(0,0,W,H);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=.07;p.vx*=.985;p.l-=.011;if(p.l>0){x.globalAlpha=p.l;x.fillStyle=p.c;x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill()}}
-  x.globalAlpha=Math.max(0,1-e/dur);for(const q of st){q.y+=q.v;x.font=q.s+'px serif';x.fillText('⭐',q.x,q.y)}
-  if(e<dur)requestAnimationFrame(frame);else cv.remove()})(t0)}
+ const cv=document.createElement('canvas');cv.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:50';const W=cv.width=innerWidth,H=cv.height=innerHeight;document.body.append(cv);const x=cv.getContext('2d'),dur=big?2600:1500,life=big?950:750,m=Math.min(W,H)*.1,ic=['⭐','🌟','✨'];
+ const st=Array.from({length:big?38:22},(_,i)=>{const sd=i%4,r=Math.random();return{x:sd<2?r*W:sd==2?Math.random()*m:W-Math.random()*m,y:sd==0?Math.random()*m:sd==1?H-Math.random()*m:r*H,s:22+Math.random()*26,d:Math.random()*(dur-life),a:(Math.random()-.5)*.8,e:ic[Math.random()*ic.length|0]}}),t0=performance.now();
+ (function frame(t){const el=t-t0;x.clearRect(0,0,W,H);x.textAlign='center';x.textBaseline='middle';x.shadowColor='#ffd166';x.shadowBlur=12;
+  for(const q of st){const u=(el-q.d)/life;if(u<0||u>1)continue;const sc=Math.sin(Math.PI*Math.min(1,u*1.15))*(1+.25*Math.sin(u*14));x.globalAlpha=u<.7?1:(1-u)/.3;x.save();x.translate(q.x,q.y);x.rotate(q.a+u*1.2);x.scale(sc,sc);x.font=q.s+'px serif';x.fillText(q.e,0,0);x.restore()}
+  if(el<dur)requestAnimationFrame(frame);else cv.remove()})(t0)}
 const celebrate=big=>{sfx(big);fw(big)};
 init();
 </script></body></html>
